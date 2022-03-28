@@ -24,7 +24,7 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bf2-nU-5li" userLabel="TopToolbar">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
-                                    <barButtonItem image="square.and.arrow.up" catalog="system" id="hPP-tE-Eqd" userLabel="Share">
+                                    <barButtonItem systemItem="action" id="hPP-tE-Eqd" userLabel="Share">
                                         <connections>
                                             <action selector="share:" destination="BYZ-38-t0r" id="xf4-P5-8I5"/>
                                         </connections>
@@ -114,6 +114,5 @@
     </scenes>
     <resources>
         <image name="camera.fill" catalog="system" width="128" height="94"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
     </resources>
 </document>
