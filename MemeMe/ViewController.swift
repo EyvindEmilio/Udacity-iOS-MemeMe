@@ -8,7 +8,13 @@
 import UIKit
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
+    static func launchNew(_ originVC: UIViewController){
+        let controller = originVC.storyboard?.instantiateViewController(withIdentifier: "MemeViewController") as! ViewController
+      
+        originVC.navigationController?.pushViewController(controller, animated: true)
+        
+    }
     // MARK: Outlets
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var btnCamera: UIBarButtonItem!
@@ -38,11 +44,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewWillAppear(animated)
         btnCamera.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         subscribeToKeyboardNotifications()
+        
+        navigationController?.isNavigationBarHidden = true
+        tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
+        navigationController?.isNavigationBarHidden = false
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidLoad() {
@@ -75,9 +86,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         present(controller, animated: true, completion: nil)
     }
-      
+    
     @IBAction func cancelMeme(_ sender: Any) {
-        resetMeme()
+        //resetMeme()
+        //dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func pickAnImageFromCamera(_ sender: Any) {
@@ -105,7 +118,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         picker.dismiss(animated: true)
     }
-
+    
     // MARK: Other Functions
     
     private func resetMeme() {
@@ -128,7 +141,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     func unsubscribeFromKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -153,10 +166,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func save() {
         let meme = Meme(topText: tfTop.text!, bottomText: tfBottom.text!, originalImage: imgView.image!, memedImage: memedImage!)
         print("MemeSaved!: \(meme)")
+        // Add it to the memes array in the Application Delegate
+        let object = UIApplication.shared.delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     func generateMemedImage() -> UIImage {
-
+        
         topToolbar.isHidden = true
         bottomToolbar.isHidden = true
         
@@ -165,13 +184,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-
+        
         topToolbar.isHidden = false
         bottomToolbar.isHidden = false
         
         return memedImage
     }
-
+    
     func pickAnImageFromSource(source: UIImagePickerController.SourceType){
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
