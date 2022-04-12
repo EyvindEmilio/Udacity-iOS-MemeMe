@@ -7,7 +7,10 @@
 
 import UIKit
 
-class MemeCollectionViewController: UICollectionViewController{
+class MemeCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout{
+    final let ITEMS_PER_ROW_PORTRAIT = 4.0
+    final let ITEMS_PER_ROW_LASDSCAPE = 2.0
+    final let CELL_SPACES = 3.0
     
     var memes: [Meme]! {
         let object = UIApplication.shared.delegate
@@ -15,25 +18,38 @@ class MemeCollectionViewController: UICollectionViewController{
         return appDelegate.memes
     }
     
-    @IBOutlet var cvList: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let space:CGFloat = 3.0
-        let dimension = (view.frame.size.width - (2 * space)) / 2.0
-print("Dimension: \(dimension)")
-        flowLayout.minimumInteritemSpacing = space
-        flowLayout.minimumLineSpacing = space
-        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+        applyFlowLayoutSpaces()
         
+    }
+    
+    private func applyFlowLayoutSpaces(){
+        flowLayout.sectionInset.right = CELL_SPACES
+        flowLayout.sectionInset.left = CELL_SPACES
+        flowLayout.minimumInteritemSpacing = CELL_SPACES
+        flowLayout.minimumLineSpacing = CELL_SPACES
+        flowLayout.itemSize = getCellSize()
+    }
+    
+    private func getCellSize() -> CGSize{
+        let itemsPerRow = self.interfaceOrientation.isPortrait ? ITEMS_PER_ROW_PORTRAIT : ITEMS_PER_ROW_LASDSCAPE
+        // Per each item there are n - 1 spaces to add between them and also adding the left and right is n - 1 + 2, then the result is n + 1
+        let dimension = (collectionView.frame.size.width - ((itemsPerRow + 1.0) * CELL_SPACES)) / itemsPerRow
+        return CGSize(width: dimension, height: dimension)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return getCellSize()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewMeme))
-        
+        print("viewWillAppear")
         collectionView.reloadData()
     }
     
@@ -44,23 +60,14 @@ print("Dimension: \(dimension)")
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return memes.count
     }
- 
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemeCollectionViewCell", for: indexPath) as! MemeCollectionViewCell
         
-       // let w = collectionView.frame.width / 3.0 - 3.0-1.0
-       // cell.frame.size.width = w
-       // cell.frame.size.height = w
-        
         let meme = memes[indexPath.row]
         cell.ivMemed?.image = meme.memedImage
-        //cell.ivMemed?.frame?.width
-        //cell.ivMemed?.image?.size = CGSize(width: cell.frame.width, height: cell.frame.height)
-        cell.ivMemed?.frame.size.width = cell.frame.width+100
-        cell.ivMemed?.frame.size.height = cell.frame.height+100
+        
         return cell
     }
 
-    
-    
 }
