@@ -55,7 +55,7 @@ class MemeCollectionViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let meme = memes[indexPath.row]
-        ViewController.launchEdit(self, meme: meme, indexMeme: indexPath.row)
+        DetailMemeViewController.launchDetail(self, meme: meme, indexMeme: indexPath.row)
     }
     
     

@@ -15,10 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+        /*
+        // For testing
         for var i in 0...2000 {
             memes.append(Meme(topText: "Meme\(i)", bottomText: "Test", originalImage: UIImage(named: "test_image"), memedImage: UIImage(named: "test_image")))
         }
+        */
+        
         return true
     }
 

@@ -28,6 +28,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private var indexMeme:Int = -1
     
     // MARK: Outlets
+    @IBOutlet var viewContentMeme: UIView!
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var btnCamera: UIBarButtonItem!
     
@@ -104,8 +105,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func cancelMeme(_ sender: Any) {
-        //resetMeme()
-        //dismiss(animated: true)
         navigationController?.popViewController(animated: true)
     }
     
@@ -210,8 +209,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         bottomToolbar.isHidden = true
         
         // Render view to an image
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        self.viewContentMeme.invalidateIntrinsicContentSize()
+        //let rect = CGRect(x: self.viewContentMeme.frame.origin.x, y: self.viewContentMeme.frame.origin.y, width: self.viewContentMeme.frame.width, height: self.viewContentMeme.frame.height)
+       
+        UIGraphicsBeginImageContext(viewContentMeme.frame.size)
+        
+        viewContentMeme.drawHierarchy(in: viewContentMeme.bounds, afterScreenUpdates: true)
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         

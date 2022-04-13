@@ -44,7 +44,7 @@ class TableViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let meme = memes[indexPath.row]
-        ViewController.launchEdit(self, meme: meme, indexMeme: indexPath.row)
+        DetailMemeViewController.launchDetail(self,meme: meme, indexMeme: indexPath.row)
     }
     
 }
