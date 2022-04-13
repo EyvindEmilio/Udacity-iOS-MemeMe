@@ -11,10 +11,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     static func launchNew(_ originVC: UIViewController){
         let controller = originVC.storyboard?.instantiateViewController(withIdentifier: "MemeViewController") as! ViewController
-      
+        
         originVC.navigationController?.pushViewController(controller, animated: true)
         
     }
+    
+    static func launchEdit(_ originVC: UIViewController, meme: Meme, indexMeme: Int){
+        let controller = originVC.storyboard?.instantiateViewController(withIdentifier: "MemeViewController") as! ViewController
+        controller.meme = meme
+        controller.indexMeme = indexMeme
+        originVC.navigationController?.pushViewController(controller, animated: true)
+        
+    }
+    
+    private var meme:Meme? = nil
+    private var indexMeme:Int = -1
+    
     // MARK: Outlets
     @IBOutlet weak var imgView: UIImageView!
     @IBOutlet weak var btnCamera: UIBarButtonItem!
@@ -69,7 +81,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         tfBottom.delegate = memeTextFieldBOTTOM
         
         resetMeme()
+        
+        populateMeme()
     }
+    
+    
     
     // MARK: Actions
     @IBAction func share(_ sender: Any) {
@@ -104,7 +120,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: Delegates
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if let image = info[.originalImage] as? UIImage {
+        if let image = info[.editedImage] as? UIImage {
             imgView.image = image
             enableSharing()
         }
@@ -126,6 +142,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         memeTextFieldBOTTOM.resetTextField(tfBottom)
         imgView.image = nil
         disableSharing()
+    }
+    
+    private func populateMeme() {
+        if let _meme = self.meme{
+            memeTextFieldTOP.setText(tfTop, _meme.topText)
+            memeTextFieldBOTTOM.setText(tfBottom, _meme.bottomText)
+            memedImage = _meme.memedImage
+            imgView.image = _meme.originalImage
+            enableSharing()
+        }
     }
     
     private func enableSharing(){
@@ -169,7 +195,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Add it to the memes array in the Application Delegate
         let object = UIApplication.shared.delegate
         let appDelegate = object as! AppDelegate
-        appDelegate.memes.append(meme)
+        if indexMeme >= 0 {
+            appDelegate.memes[indexMeme] = meme
+        } else {
+            appDelegate.memes.append(meme)
+        }
         
         self.navigationController?.popViewController(animated: true)
     }

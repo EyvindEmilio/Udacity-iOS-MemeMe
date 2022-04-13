@@ -27,7 +27,12 @@ class MemeTextFieldDelegate: NSObject, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        return true;
+        return true
+    }
+    
+    func setText(_ textField: UITextField, _ text:String) {
+        textField.text = text
+        isDefultTextSet = false
     }
     
     func resetTextField(_ textField: UITextField){
