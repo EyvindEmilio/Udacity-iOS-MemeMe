@@ -72,21 +72,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tfTop.defaultTextAttributes = memeTextAttributes
-        tfBottom.defaultTextAttributes = memeTextAttributes
+        setupTextField(tf: tfTop, delegate: memeTextFieldTOP)
         
-        tfTop.textAlignment = .center
-        tfBottom.textAlignment = .center
-        
-        tfTop.delegate = memeTextFieldTOP
-        tfBottom.delegate = memeTextFieldBOTTOM
+        setupTextField(tf: tfBottom, delegate: memeTextFieldBOTTOM)
         
         resetMeme()
         
         populateMeme()
     }
-    
-    
     
     // MARK: Actions
     @IBAction func share(_ sender: Any) {
@@ -230,6 +223,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.allowsEditing = true
         imagePicker.sourceType = source
         present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func setupTextField(tf: UITextField, delegate: MemeTextFieldDelegate) {
+        tf.defaultTextAttributes = [
+            NSAttributedString.Key.foregroundColor : UIColor.white,
+            NSAttributedString.Key.strokeColor : UIColor.black,
+            NSAttributedString.Key.font : UIFont(name: "Impact", size: 35)!,
+            NSAttributedString.Key.strokeWidth: -4.0
+        ]
+        tf.textColor = UIColor.white
+        tf.tintColor = UIColor.white
+        tf.textAlignment = .center
+        tf.delegate = delegate
     }
 }
 
